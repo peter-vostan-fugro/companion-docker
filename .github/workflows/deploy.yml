@@ -13,9 +13,9 @@ jobs:
     strategy:
       matrix:
         docker: [bootstrap, core]
-        project: [bluerobotics/companion]
-        new_project: [bluerobotics/blueos]
-        platforms: ["linux/arm/v7"]
+        project: [petervostan/companion]
+        # new_project: [bluerobotics/blueos]
+        platforms: ["linux/arm/v7", "linux/arm64/v8"]
     steps:
       -
         name: Checkout
