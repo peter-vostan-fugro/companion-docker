@@ -10,10 +10,10 @@ set -e
 
 # Check if the script is running in a supported architecture
 SUPPORTED_ARCHITECTURES=(
-  "armhf" # Pi, Pi2, Pi3, Pi4
-  "armv7" # Pi2, Pi3, Pi4
-  "armv7l" # Pi2, Pi3, Pi4 (Raspberry Pi OS Bullseye)
-  "aarch64" # Pi3, Pi4
+    "armhf"   # Pi, Pi2, Pi3, Pi4
+    "armv7"   # Pi2, Pi3, Pi4
+    "armv7l"  # Pi2, Pi3, Pi4 (Raspberry Pi OS Bullseye)
+    "aarch64" # Pi3, Pi4, nvidia-jetson
 )
 ARCHITECTURE="$(uname -m)"
 [[ ! "${SUPPORTED_ARCHITECTURES[*]}" =~ $ARCHITECTURE ]] && (
@@ -23,17 +23,18 @@ ARCHITECTURE="$(uname -m)"
 )
 
 # Check if the script is running as root
-[[ $EUID != 0 ]] && echo "Script must run as root."  && exit 1
+[[ $EUID != 0 ]] && echo "Script must run as root." && exit 1
 
 echo "Checking if network and remote are available."
-curl -fsSL --silent $ROOT/install/install.sh 1> /dev/null || (
+curl -fsSL --silent $ROOT/install/install.sh 1>/dev/null || (
     echo "Remote is not available: ${ROOT}"
     exit 1
 )
 
-# Detect CPU and do necessary hardware configuration for each supported hardware
-echo "Starting hardware configuration."
-curl -fsSL "$ROOT/install/boards/configure_board.sh" | bash
+# TODO: Add support for nvidia-jetson instead of commenting out
+# # Detect CPU and do necessary hardware configuration for each supported hardware
+# echo "Starting hardware configuration."
+# curl -fsSL "$ROOT/install/boards/configure_board.sh" | bash
 
 echo "Checking for blocked wifi and bluetooth."
 rfkill unblock all
@@ -42,7 +43,7 @@ rfkill unblock all
 echo "Checking for available space."
 AVAILABLE_SPACE_GB=$(($(stat -f / --format="%a*%S/1024**3")))
 NECESSARY_SPACE_GB=4
-(( AVAILABLE_SPACE_GB < NECESSARY_SPACE_GB )) && (
+((AVAILABLE_SPACE_GB < NECESSARY_SPACE_GB)) && (
     echo "Not enough free space to install companion, at least ${NECESSARY_SPACE_GB}GB required"
     exit 1
 )
@@ -77,11 +78,12 @@ echo "Going to install companion-docker version ${VERSION}."
 echo "Downloading and installing udev rules."
 curl -fsSL $ROOT/install/udev/100.autopilot.rules -o /etc/udev/rules.d/100.autopilot.rules
 
-echo "Disabling automatic Link-local configuration in dhcpd.conf."
-# delete line if it already exists
-sed -i '/noipv4ll/d' /etc/dhcpcd.conf
-# add noipv4ll
-sed -i '$ a noipv4ll' /etc/dhcpcd.conf
+# TODO: Add support for nvidia-jetson instead of commenting out
+# echo "Disabling automatic Link-local configuration in dhcpd.conf."
+# # delete line if it already exists
+# sed -i '/noipv4ll/d' /etc/dhcpcd.conf
+# # add noipv4ll
+# sed -i '$ a noipv4ll' /etc/dhcpcd.conf
 
 echo "Downloading bootstrap"
 COMPANION_BOOTSTRAP="bluerobotics/companion-bootstrap:master" # We don't have others tags for now
