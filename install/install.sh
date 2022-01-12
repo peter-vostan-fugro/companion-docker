@@ -86,7 +86,8 @@ curl -fsSL $ROOT/install/udev/100.autopilot.rules -o /etc/udev/rules.d/100.autop
 # sed -i '$ a noipv4ll' /etc/dhcpcd.conf
 
 echo "Downloading bootstrap"
-COMPANION_BOOTSTRAP="bluerobotics/companion-bootstrap:master" # We don't have others tags for now
+COMPANION_BOOTSTRAP="${COMPANION_BOOTSTRAP:-bluerobotics/companion-bootstrap:master}"
+# COMPANION_BOOTSTRAP="bluerobotics/companion-bootstrap:master" # We don't have others tags for now
 docker pull $COMPANION_BOOTSTRAP
 # Start bootstrap for the first time to fetch the other images and allow docker to restart it after reboot
 docker run \
