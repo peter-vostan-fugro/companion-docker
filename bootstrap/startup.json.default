@@ -1,7 +1,7 @@
 {
     "core": {
         "tag": "master",
-        "image": "petervostan/companion-core",
+        "image": "bluerobotics/companion-core",
         "enabled": true,
         "webui": false,
         "network": "host",
