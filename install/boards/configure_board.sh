@@ -22,13 +22,16 @@ echo "Detecting board type"
 #     which use the bcm2836/bcm2837, bcm2837 and bcm2711 respectively.
 #     You can use cat /proc/device-tree/model to get an accurate description of the SoC on your Raspberry Pi model.
 if [ -f "/proc/device-tree/model" ]; then
-    CPU_MODEL=$(tr -d '\0' < /proc/device-tree/model)
+    CPU_MODEL=$(tr -d '\0' </proc/device-tree/model)
     if [[ $CPU_MODEL =~ Raspberry\ Pi\ [0-3] ]]; then
         echo "Detected BCM28XX via device tree"
         curl -fsSL $CONFIGURE_BOARD_PATH/bcm_28xx.sh | bash
-    elif [[ $CPU_MODEL =~ Raspberry\ Pi\ [4] ]];then
+    elif [[ $CPU_MODEL =~ Raspberry\ Pi\ [4] ]]; then
         echo "Detected BCM27XX via device tree"
         curl -fsSL $CONFIGURE_BOARD_PATH/bcm_27xx.sh | bash
+    elif [[ $CPU_MODEL =~ NVIDIA\ Jetson\ Xavier\ NX ]]; then
+        echo "Detected ARMv8 via device tree"
+        curl -fsSL $CONFIGURE_BOARD_PATH/arm_v8.sh | bash
     else
         board_not_detected "/proc/device-tree/model" "$CPU_MODEL"
     fi
@@ -42,6 +45,9 @@ elif [ -f "/proc/cpuinfo" ]; then
     elif [[ $CPU_INFO =~ BCM28[0-9]{2} ]]; then
         echo "Detected BCM28XX via cpuinfo"
         curl -fsSL $CONFIGURE_BOARD_PATH/bcm_28xx.sh | bash
+    elif [[ $CPU_INFO =~ ARMv8 ]]; then
+        echo "Detected ARMv8 via device tree"
+        curl -fsSL $CONFIGURE_BOARD_PATH/arm_v8.sh | bash
     else
         board_not_detected "/proc/cpuinfo" "$CPU_INFO"
     fi

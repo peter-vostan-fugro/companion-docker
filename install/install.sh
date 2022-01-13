@@ -31,10 +31,9 @@ curl -fsSL --silent $ROOT/install/install.sh 1>/dev/null || (
     exit 1
 )
 
-# TODO: Add support for nvidia-jetson instead of commenting out
-# # Detect CPU and do necessary hardware configuration for each supported hardware
-# echo "Starting hardware configuration."
-# curl -fsSL "$ROOT/install/boards/configure_board.sh" | bash
+# Detect CPU and do necessary hardware configuration for each supported hardware
+echo "Starting hardware configuration."
+curl -fsSL "$ROOT/install/boards/configure_board.sh" | bash
 
 echo "Checking for blocked wifi and bluetooth."
 rfkill unblock all
