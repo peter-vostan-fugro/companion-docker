@@ -80,7 +80,7 @@ curl -fsSL $ROOT/install/udev/100.autopilot.rules -o /etc/udev/rules.d/100.autop
 echo "Disabling automatic Link-local configuration in dhcpd.conf."
 # create dhcpcd.conf if it doesn't already exist
 if [ ! -e /etc/dhcpcd.conf ]; then
-    touch /etc/dhcpcd.conf
+    echo '' >/etc/dhcpcd.conf
 fi
 # delete line if it already exists
 sed -i '/noipv4ll/d' /etc/dhcpcd.conf
