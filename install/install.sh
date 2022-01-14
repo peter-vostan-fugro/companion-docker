@@ -77,12 +77,15 @@ echo "Going to install companion-docker version ${VERSION}."
 echo "Downloading and installing udev rules."
 curl -fsSL $ROOT/install/udev/100.autopilot.rules -o /etc/udev/rules.d/100.autopilot.rules
 
-# TODO: Add support for nvidia-jetson instead of commenting out
-# echo "Disabling automatic Link-local configuration in dhcpd.conf."
-# # delete line if it already exists
-# sed -i '/noipv4ll/d' /etc/dhcpcd.conf
-# # add noipv4ll
-# sed -i '$ a noipv4ll' /etc/dhcpcd.conf
+echo "Disabling automatic Link-local configuration in dhcpd.conf."
+# create dhcpcd.conf if it doesn't already exist
+if [ ! -e /etc/dhcpcd.conf ]; then
+    touch /etc/dhcpcd.conf
+fi
+# delete line if it already exists
+sed -i '/noipv4ll/d' /etc/dhcpcd.conf
+# add noipv4ll
+sed -i '$ a noipv4ll' /etc/dhcpcd.conf
 
 echo "Downloading bootstrap"
 COMPANION_BOOTSTRAP="${COMPANION_BOOTSTRAP:-bluerobotics/companion-bootstrap:master}"
