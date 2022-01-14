@@ -87,6 +87,7 @@ class Platform(str, Enum):
     The Enum values are 1:1 representations of the platforms available on the ArduPilot manifest."""
 
     Pixhawk1 = "Pixhawk1"
+    CUAV_X7 = "CUAV-X7"
     Navigator = "navigator"
     SITL = get_sitl_platform_name(machine())
     Undefined = "Undefined"

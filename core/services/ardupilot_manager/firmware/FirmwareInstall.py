@@ -23,6 +23,7 @@ from typedefs import FirmwareFormat, Platform
 def get_board_id(platform: Platform) -> int:
     ardupilot_board_ids = {
         Platform.Pixhawk1: 9,
+        Platform.CUAV_X7: 1010,
     }
     return ardupilot_board_ids.get(platform, -1)
 
@@ -147,7 +148,7 @@ class FirmwareInstaller:
         self.validate_firmware(new_firmware_path, platform)
 
         try:
-            if platform == Platform.Pixhawk1:
+            if platform == Platform.Pixhawk1 or platform == Platform.CUAV_X7:
                 firmware_uploader = FirmwareUploader()
                 firmware_uploader.upload(new_firmware_path)
                 return
