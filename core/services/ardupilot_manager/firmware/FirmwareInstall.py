@@ -148,7 +148,7 @@ class FirmwareInstaller:
         self.validate_firmware(new_firmware_path, platform)
 
         try:
-            if platform == Platform.Pixhawk1 or platform == Platform.CUAV_X7:
+            if platform in (Platform.Pixhawk1, Platform.CUAV_X7):
                 firmware_uploader = FirmwareUploader()
                 firmware_uploader.upload(new_firmware_path)
                 return

@@ -44,7 +44,7 @@ class FirmwareManager:
         if platform == Platform.Undefined:
             raise UndefinedPlatform("Platform is undefined. Cannot verify if firmware is installed.")
 
-        if platform == Platform.Pixhawk1 or platform == Platform.CUAV_X7:
+        if platform in (Platform.Pixhawk1, Platform.CUAV_X7):
             # Assumes for now that a Pixhawk always has a firmware installed, which is true most of the time
             # TODO: Validate if properly. The uploader tool seems capable of doing this.
             return True
@@ -73,7 +73,7 @@ class FirmwareManager:
 
     def install_firmware_from_file(self, new_firmware_path: pathlib.Path, platform: Platform) -> None:
         try:
-            if platform == Platform.Pixhawk1 or platform == Platform.CUAV_X7:
+            if platform in (Platform.Pixhawk1, Platform.CUAV_X7):
                 self.firmware_installer.install_firmware(new_firmware_path, platform)
             else:
                 self.firmware_installer.install_firmware(new_firmware_path, platform, self.firmware_path(platform))
