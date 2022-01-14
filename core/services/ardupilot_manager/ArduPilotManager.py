@@ -180,8 +180,8 @@ class ArduPilotManager(metaclass=Singleton):
         self.start_mavlink_manager(master_endpoint)
 
     def start_serial(self, device: str) -> None:
-        # self.current_platform = Platform.Pixhawk1
-        self.current_platform = Platform.CUAV_X7    # Hack, this should shouldn't be hardcoded
+        # Hack, this should shouldn't be hardcoded
+        self.current_platform = Platform.CUAV_X7
         self.start_mavlink_manager(
             Endpoint("Master", self.settings.app_name, EndpointType.Serial, device, 115200, protected=True)
         )
