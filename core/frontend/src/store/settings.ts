@@ -4,6 +4,7 @@ import {
 } from 'vuex-module-decorators'
 
 import store from '@/store'
+import { castString } from '@/utils/helper_functions'
 
 @Module({
   dynamic: true,
@@ -17,9 +18,17 @@ class SettingsStore extends VuexModule {
 
     is_dark_theme: boolean = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
+    is_pirate_mode = false
+
     @Mutation
     setDarkTheme(value: boolean): void {
       this.is_dark_theme = value
+      SettingsStore.save()
+    }
+
+    @Mutation
+    setPirateMode(value: boolean): void {
+      this.is_pirate_mode = value
       SettingsStore.save()
     }
 
@@ -38,7 +47,9 @@ class SettingsStore extends VuexModule {
      * @returns T
      */
     static loadVariable<T>(name: string): T {
-      return (window.localStorage.getItem(SettingsStore.settingsName(name)) as unknown) as T
+      const storedVariable = window.localStorage.getItem(SettingsStore.settingsName(name))
+      const castedVariable = storedVariable === null ? null : castString(storedVariable)
+      return castedVariable as T
     }
 
     /**
@@ -86,7 +97,7 @@ class SettingsStore extends VuexModule {
 
       SettingsStore.load()
     }
-  }
+}
 
 export { SettingsStore }
 

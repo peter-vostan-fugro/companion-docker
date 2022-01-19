@@ -23,24 +23,25 @@
 
         <v-divider />
 
-        <v-container class="pa-8">
-          <v-row
-            justify="center"
+        <v-card-actions class="d-flex flex-column justify-space-around align-center">
+          <v-btn
+            @click="reset_settings"
           >
-            <v-btn
-              @click="reset_settings"
-            >
-              <v-icon left>
-                mdi-trash-can
-              </v-icon>
-              Reset Settings
-            </v-btn>
-            <v-switch
-              v-model="settings.is_dark_theme"
-              label="Dark mode"
-            />
-          </v-row>
-        </v-container>
+            <v-icon left>
+              mdi-trash-can
+            </v-icon>
+            Reset Settings
+          </v-btn>
+          <v-switch
+            v-model="settings.is_pirate_mode"
+            label="Pirate mode"
+            @change="togglePirateWarning"
+          />
+          <v-switch
+            v-model="settings.is_dark_theme"
+            label="Dark mode"
+          />
+        </v-card-actions>
       </v-card>
     </v-dialog>
     <v-dialog
@@ -52,6 +53,19 @@
         <v-container class="pa-8">
           Restart the system to finish the settings reset.
         </v-container>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="pirate_warning"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          Pirate mode activated!
+        </v-card-title>
+        <v-card-text>
+          With a shiny hook comes great responsibilities! If you're navigating, don't drink rum.
+        </v-card-text>
       </v-card>
     </v-dialog>
   </v-container>
@@ -76,9 +90,13 @@ export default Vue.extend({
       show_dialog: false,
       show_reset_dialog: false,
       settings,
+      pirate_warning: false,
     }
   },
   methods: {
+    togglePirateWarning(): void {
+      this.pirate_warning = settings.is_pirate_mode
+    },
     async reset_settings(): Promise<void> {
       await back_axios({
         url: `${API_URL}/settings/reset`,
